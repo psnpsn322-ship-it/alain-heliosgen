@@ -7,7 +7,9 @@ import { GUEST_MODE } from "@/lib/guestMode";
 import * as guestDb from "@/lib/guest/db";
 import { POST as generateVideoPOST } from "@/app/api/generate-video/route";
 
-export const maxDuration = 1000;
+// This route only creates an external KIE task and returns its taskId.
+// Keep it short-lived so it remains compatible with Vercel Hobby.
+export const maxDuration = 60;
 
 const DEFAULT_IMAGE_MODEL = "nano-banana-2";
 const DEFAULT_IMAGE_ASPECT = "4:5";
