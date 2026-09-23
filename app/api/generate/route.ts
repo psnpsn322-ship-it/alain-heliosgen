@@ -517,10 +517,9 @@ export async function POST(req: NextRequest) {
   const kieToken = currentUserId ? await getKieTokenForUser(currentUserId) : null;
   if (!kieToken) return NextResponse.json({ error: "No Kie.ai API key configured. Add one in Settings." }, { status: 401 });
 
-  const callbackBase = process.env.CALLBACK_BASE_URL;
-  if (!callbackBase) return NextResponse.json({ error: "CALLBACK_BASE_URL is not set" }, { status: 500 });
-
-  const callBackUrl = `${callbackBase.replace(/\/$/, "")}/api/callback`;
+  // Route provider callbacks back to the HeliosGen deployment that created the task.
+  // This avoids stale or cross-project CALLBACK_BASE_URL configuration.
+  const callBackUrl = `${new URL(req.url).origin}/api/callback`;
 
   try {
     const { apiInput } = cfg;
