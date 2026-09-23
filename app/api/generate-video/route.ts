@@ -52,9 +52,9 @@ export async function POST(req: NextRequest) {
   const apiKey = (userId ? await getKieTokenForUser(userId) : null) ?? process.env.KIE_API_TOKEN ?? null;
   if (!apiKey) return NextResponse.json({ error: "No Kie.ai API key configured. Add one in Settings." }, { status: 401 });
 
-  const callbackBase = process.env.CALLBACK_BASE_URL;
-  const callBackUrl = rawCallBackUrl || (callbackBase ? `${callbackBase.replace(/\/$/, "")}/api/callback` : undefined);
-  if (!callBackUrl) return NextResponse.json({ error: "callBackUrl or CALLBACK_BASE_URL not set" }, { status: 500 });
+  // Explicit callbacks are kept for trusted internal callers; regular requests
+  // always fall back to the HeliosGen deployment that created the task.
+  const callBackUrl = rawCallBackUrl || `${new URL(req.url).origin}/api/callback`;
 
   const cfg = VIDEO_MODELS.find((m) => m.id === videoModel);
   if (!cfg) return NextResponse.json({ error: `Unknown video model: ${videoModel}` }, { status: 400 });
