@@ -58,11 +58,9 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const callbackBase = process.env.CALLBACK_BASE_URL;
-  if (!callbackBase) {
-    return NextResponse.json({ error: "CALLBACK_BASE_URL is not set." }, { status: 503 });
-  }
-  const callbackUrl = `${callbackBase.replace(/\/$/, "")}/api/callback`;
+  // Keep callbacks bound to this HeliosGen deployment instead of relying on
+  // an environment value that may have been copied from another Vercel project.
+  const callbackUrl = `${new URL(req.url).origin}/api/callback`;
 
   const refs = (body.references ?? []).filter((u) => typeof u === "string" && /^https?:|^data:/.test(u));
   const meta = body.metadata ?? {};
