@@ -3,6 +3,7 @@ import AuthModal from "@/components/AuthModal";
 import ResetPasswordModal from "@/components/ResetPasswordModal";
 import SettingsModal from "@/components/SettingsModal";
 import Toaster from "@/components/Toaster";
+import SessionBootstrap from "@/components/SessionBootstrap";
 import { useWorkflowStore } from "@/lib/store";
 
 export default function GlobalModals() {
@@ -11,6 +12,7 @@ export default function GlobalModals() {
 
   return (
     <>
+      <SessionBootstrap />
       <AuthModal />
       <ResetPasswordModal />
       {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}

@@ -830,8 +830,9 @@ export function AppSidebar() {
     });
   }
 
+  const isDeviceSession = user?.user_metadata?.helios_device_session === true;
   const displayName = user
-    ? (user.user_metadata?.full_name || user.email?.split("@")[0] || "User")
+    ? (isDeviceSession ? "Helios User" : (user.user_metadata?.full_name || user.email?.split("@")[0] || "User"))
     : "Guest User";
 
   const avatarSeed = user?.id || "guest";
@@ -1105,7 +1106,7 @@ export function AppSidebar() {
             </DropdownMenuItem>
 
             {/* Sign out / Sign in — hidden in guest mode */}
-            {process.env.NEXT_PUBLIC_GUEST_MODE !== "true" && (
+            {process.env.NEXT_PUBLIC_GUEST_MODE !== "true" && !isDeviceSession && (
               <>
                 <DropdownMenuSeparator className="!bg-white/[0.07] !my-0 !mx-0" />
                 {user ? (
